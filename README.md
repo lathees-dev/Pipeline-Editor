@@ -80,4 +80,21 @@ npm install
 npm run dev 
 ```
 
+🎥 Screenshots
+Node Builder
+![image](https://github.com/user-attachments/assets/ca9b38fb-5318-433d-91e4-2b2a14fda286)
+
+Add a Node
+![image](https://github.com/user-attachments/assets/fae133bd-e553-4866-a047-bbc7d340e22b)
+
+Unconnected Nodes
+![image](https://github.com/user-attachments/assets/2857b19b-003d-44cc-8dd2-8dac171aa8a0)
+
+Connected nodes
+![image](https://github.com/user-attachments/assets/901a6da0-4fd3-4ae6-b85d-115ab73f4879)
+
+Auto Layout
+![image](https://github.com/user-attachments/assets/29625c1e-40ed-4293-b0a6-d3033b75923a)
+
+
 Built with 💡, React Flow, and caffeine.
