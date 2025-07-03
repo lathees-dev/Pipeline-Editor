@@ -4,8 +4,11 @@ import ReactFlow, {
   ReactFlowProvider,
   Background,
   Controls,
+  Handle,
+  Position,
   applyEdgeChanges,
   applyNodeChanges,
+  addEdge,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { nanoid } from "nanoid";
@@ -26,10 +29,10 @@ function DAGEditor() {
     const newNode = {
       id,
       position: {
-        x: Math.random() * 250 + 100,
-        y: Math.random() * 250 + 100,
+        x: Math.random() * 400 + 100,
+        y: Math.random() * 400 + 100,
       },
-      data: { label: label },
+      data: { label },
       type: "default",
     };
 
@@ -46,6 +49,21 @@ function DAGEditor() {
     []
   );
 
+  const onConnect = useCallback((params) => {
+    const { source, target } = params;
+
+    // Rule 1: no self-connections
+    if (source === target) {
+      alert("Invalid: Self-loop not allowed.");
+      return;
+    }
+
+    // Rule 2: allow only source ➝ target direction
+    // In this default setup, we enforce it via handle placement (Right ➝ Left)
+    setEdges((eds) => addEdge(params, eds));
+  }, []);
+  
+
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       <ReactFlow
@@ -53,6 +71,7 @@ function DAGEditor() {
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
         fitView
       >
         <Background />
