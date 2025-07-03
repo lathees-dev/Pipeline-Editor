@@ -83,6 +83,11 @@ function DAGEditor() {
               placeholder="Enter node label"
               autoFocus
               style={modalInput}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleNodeCreate();
+                }
+              }}
             />
             <div style={modalFooter}>
               <button onClick={handleNodeCreate} style={modalAddBtn}>
