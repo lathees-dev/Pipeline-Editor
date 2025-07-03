@@ -1,3 +1,4 @@
+// Displays DAG validity status with contextual background color
 export default function StatusBar({ isValid, reason }) {
   return (
     <div

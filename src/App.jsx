@@ -1,25 +1,39 @@
+  // Core imports for React, React Flow, and custom logic
 import { useEffect, useState, useCallback } from "react";
-import ReactFlow, { useReactFlow, ReactFlowProvider, Background, Controls } from "reactflow";
+import ReactFlow, {
+  useReactFlow,
+  ReactFlowProvider,
+  Background,
+  Controls,
+} from "reactflow";
 import "reactflow/dist/style.css";
+
+// Custom hooks and utilities
 import useDagValidation from "./hooks/useDagValidation";
 import { useGraphHandlers } from "./hooks/useGraphHandlers";
 import { getLayoutedElements } from "./utils/layoutEngine";
+
+// UI components
 import StatusBar from "./components/StatusBar";
 import JsonPreview from "./components/JsonPreview";
 import Toolbar from "./components/Toolbar";
 
+// Main DAG Editor component
 function DAGEditor() {
+  // React Flow graph state
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
 
+  // State for modal input control
   const [showInput, setShowInput] = useState(false);
   const [newNodeLabel, setNewNodeLabel] = useState("");
 
-  const {
-    createNode, onConnect, onNodesChange, onEdgesChange } = useGraphHandlers({
-    setNodes,
-    setEdges,
-  });
+  // Setup handlers, validation, and auto-layout
+  const { createNode, onConnect, onNodesChange, onEdgesChange } =
+    useGraphHandlers({
+      setNodes,
+      setEdges,
+    });
 
   const handleNodeCreate = () => {
     if (!newNodeLabel.trim()) return;
@@ -27,18 +41,19 @@ function DAGEditor() {
     setNewNodeLabel("");
     setShowInput(false);
   };
-  
+
   const { fitView } = useReactFlow();
   const layoutGraph = useCallback(() => {
     const layouted = getLayoutedElements(nodes, edges, "TB");
     setNodes([...layouted.nodes]);
     setEdges([...layouted.edges]);
-    setTimeout(() => fitView({ duration: 800 }), 0); 
+    setTimeout(() => fitView({ duration: 800 }), 0);  
   }, [nodes, edges, setNodes, setEdges, fitView]);
-  
 
+  // Validate the DAG on each state change
   const dagStatus = useDagValidation(nodes, edges);
 
+  // Handle Delete key to remove selected nodes/edges
   useEffect(() => {
     const handleDelete = (e) => {
       if (e.key === "Delete") {
@@ -50,6 +65,7 @@ function DAGEditor() {
     return () => window.removeEventListener("keydown", handleDelete);
   }, [nodes, edges]);
 
+  // Render DAG editor with overlays, toolbar, modal and status
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       <ReactFlow
@@ -64,14 +80,14 @@ function DAGEditor() {
         <Controls />
       </ReactFlow>
 
-      {/* Toolbar */}
+      {/* Floating Toolbar: Add Node + Auto Layout */}
       <Toolbar onAddNode={() => setShowInput(true)} onLayout={layoutGraph} />
 
-      {/* Status + JSON */}
+      {/* DAG validation status + real-time JSON preview */}
       <StatusBar isValid={dagStatus.valid} reason={dagStatus.reason} />
       <JsonPreview nodes={nodes} edges={edges} />
 
-      {/* Modal Node Input */}
+      {/* Modal for manual node label input */}
       {showInput && (
         <div style={backdropStyle}>
           <div style={modalCard}>
@@ -107,6 +123,7 @@ function DAGEditor() {
   );
 }
 
+// Modal and backdrop styles
 const backdropStyle = {
   position: "fixed",
   top: 0,
@@ -169,7 +186,7 @@ const modalCancelBtn = {
   color: "#111827",
 };
 
-
+// Root export with ReactFlowProvider
 export default function App() {
   return (
     <ReactFlowProvider>

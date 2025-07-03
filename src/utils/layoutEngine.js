@@ -1,11 +1,13 @@
 import dagre from "dagre";
 
+// Configure Dagre graph and default edge label
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
 
 const nodeWidth = 172;
 const nodeHeight = 36;
 
+//Auto-arranges nodes using dagre layout (top-down or left-right)
 export function getLayoutedElements(nodes, edges, direction = "TB") {
   dagreGraph.setGraph({ rankdir: direction });
 
@@ -20,14 +22,13 @@ export function getLayoutedElements(nodes, edges, direction = "TB") {
   dagre.layout(dagreGraph);
 
   const layoutedNodes = nodes.map((node) => {
-    const nodeWithPos = dagreGraph.node(node.id);
+    const { x, y } = dagreGraph.node(node.id);
     return {
       ...node,
       position: {
-        x: nodeWithPos.x - nodeWidth / 2,
-        y: nodeWithPos.y - nodeHeight / 2,
+        x: x - nodeWidth / 2,
+        y: y - nodeHeight / 2,
       },
-      data: { ...node.data },
     };
   });
 

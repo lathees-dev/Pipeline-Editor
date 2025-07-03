@@ -1,3 +1,4 @@
+// Displays a real-time JSON dump of current DAG nodes and edges
 export default function JsonPreview({ nodes, edges }) {
   return (
     <div

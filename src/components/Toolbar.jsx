@@ -1,6 +1,7 @@
 import { FaPlus, FaProjectDiagram } from "react-icons/fa";
 import { Tooltip } from "react-tooltip";
 
+// Toolbar component for adding nodes and auto-layout functionality
 export default function Toolbar({ onAddNode, onLayout }) {
   return (
     <>
@@ -26,6 +27,7 @@ export default function Toolbar({ onAddNode, onLayout }) {
   );
 }
 
+// Reusable style function for positioning toolbar buttons
 function btnStyle(top) {
   return {
     position: "absolute",
