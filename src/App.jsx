@@ -9,6 +9,7 @@ import ReactFlow, {
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { nanoid } from "nanoid";
+import useDagValidation from "./hooks/useDagValidation";
 
 const initialNodes = [];
 const initialEdges = [];
@@ -16,6 +17,7 @@ const initialEdges = [];
 function DAGEditor() {
   const [nodes, setNodes] = useState(initialNodes);
   const [edges, setEdges] = useState(initialEdges);
+  const dagStatus = useDagValidation(nodes, edges);
 
   // Delete selected nodes/edges on Delete key
   useEffect(() => {
@@ -104,6 +106,22 @@ function DAGEditor() {
       >
         + Add Node
       </button>
+      <div
+        style={{
+          position: "absolute",
+          bottom: 20,
+          left: 20,
+          zIndex: 1000,
+          background: dagStatus.valid ? "#d1fae5" : "#fee2e2",
+          color: dagStatus.valid ? "#065f46" : "#b91c1c",
+          padding: "8px 12px",
+          borderRadius: "6px",
+          fontWeight: 500,
+          boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
+        }}
+      >
+        {dagStatus.reason}
+      </div>
     </div>
   );
 }
