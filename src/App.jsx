@@ -5,11 +5,13 @@ import ReactFlow, {
   Controls,
   applyEdgeChanges,
   applyNodeChanges,
+  useReactFlow,
   addEdge,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { nanoid } from "nanoid";
 import useDagValidation from "./hooks/useDagValidation";
+import { getLayoutedElements } from "./utils/layoutEngine";
 
 const initialNodes = [];
 const initialEdges = [];
@@ -18,6 +20,15 @@ function DAGEditor() {
   const [nodes, setNodes] = useState(initialNodes);
   const [edges, setEdges] = useState(initialEdges);
   const dagStatus = useDagValidation(nodes, edges);
+  const { fitView } = useReactFlow();
+
+  const onLayout = useCallback(() => {
+    const layouted = getLayoutedElements(nodes, edges, "TB"); // 'LR' = left-right, 'TB' = top-bottom
+    setNodes([...layouted.nodes]);
+    setEdges([...layouted.edges]);
+    fitView();
+  }, [nodes, edges, setNodes, setEdges, fitView]);
+
 
   // Delete selected nodes/edges on Delete key
   useEffect(() => {
@@ -106,6 +117,24 @@ function DAGEditor() {
       >
         + Add Node
       </button>
+      <button
+        onClick={onLayout}
+        style={{
+          position: "absolute",
+          top: 60,
+          left: 20,
+          zIndex: 1000,
+          padding: "8px 12px",
+          background: "#10b981",
+          color: "#fff",
+          border: "none",
+          borderRadius: 6,
+          cursor: "pointer",
+        }}
+      >
+        Auto Layout
+      </button>
+
       <div
         style={{
           position: "absolute",
