@@ -28,10 +28,10 @@ export function useGraphHandlers({ setNodes, setEdges }) {
         const newEdge = {
           ...params,
           type: "default",
-          style: { stroke: isSelfLoop ? "red" : "#4f46e5" },
+          style: { stroke: isSelfLoop ? "red" : "" },
           markerEnd: {
             type: "arrowclosed",
-            color: isSelfLoop ? "red" : "#4f46e5",
+            color: isSelfLoop ? "red" : "",
           },
           data: { isInvalid: isSelfLoop },
         };
