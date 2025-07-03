@@ -6,7 +6,7 @@ This project is a React-based **Pipeline Editor (DAG Builder)** designed for Nex
 
 ## 🚀 Live Demo
 
-👉 [Click here to view the live demo](https://your-vercel-link.vercel.app)
+👉 [Click here to view the live demo](https://pipeline-editor-olive.vercel.app/)
 
 ---
 
