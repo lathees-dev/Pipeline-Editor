@@ -1,11 +1,8 @@
-// src/App.js
-import React, { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import ReactFlow, {
   ReactFlowProvider,
   Background,
   Controls,
-  Handle,
-  Position,
   applyEdgeChanges,
   applyNodeChanges,
   addEdge,
@@ -20,23 +17,50 @@ function DAGEditor() {
   const [nodes, setNodes] = useState(initialNodes);
   const [edges, setEdges] = useState(initialEdges);
 
+  // Delete selected nodes/edges on Delete key
+  useEffect(() => {
+    const handleDelete = (event) => {
+      if (event.key === "Delete") {
+        const updatedNodes = nodes.filter((node) => !node.selected);
+        const updatedEdges = edges.filter((edge) => !edge.selected);
+        setNodes(updatedNodes);
+        setEdges(updatedEdges);
+      }
+    };
+
+    window.addEventListener("keydown", handleDelete);
+    return () => window.removeEventListener("keydown", handleDelete);
+  }, [nodes, edges]);
+
+  // Add node with label and random position
   const addNode = useCallback(() => {
     const label = prompt("Enter node label");
     if (!label) return;
 
     const id = nanoid(6);
-
     const newNode = {
       id,
+      data: { label },
       position: {
         x: Math.random() * 400 + 100,
         y: Math.random() * 400 + 100,
       },
-      data: { label },
       type: "default",
     };
 
     setNodes((nds) => [...nds, newNode]);
+  }, []);
+
+  // Edge validation and connect
+  const onConnect = useCallback((params) => {
+    const { source, target } = params;
+
+    if (source === target) {
+      alert("Invalid: Self-loop not allowed.");
+      return;
+    }
+
+    setEdges((eds) => addEdge(params, eds));
   }, []);
 
   const onNodesChange = useCallback(
@@ -48,21 +72,6 @@ function DAGEditor() {
     (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
     []
   );
-
-  const onConnect = useCallback((params) => {
-    const { source, target } = params;
-
-    // Rule 1: no self-connections
-    if (source === target) {
-      alert("Invalid: Self-loop not allowed.");
-      return;
-    }
-
-    // Rule 2: allow only source ➝ target direction
-    // In this default setup, we enforce it via handle placement (Right ➝ Left)
-    setEdges((eds) => addEdge(params, eds));
-  }, []);
-  
 
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
