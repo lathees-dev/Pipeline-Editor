@@ -36,7 +36,6 @@ function DAGEditor() {
           cursor: "pointer",
         }}
         onClick={() => {
-          // to be implemented
           alert("Add Node logic goes here");
         }}
       >
